@@ -1,0 +1,91 @@
+---
+title: "popuko"
+author: "Ron0128"
+output: html_document
+date: "`r format(Sys.time(), '%Y/%m/%d')`"
+---
+
+* ポプ子のドット絵図案は下記サイトより引用しました
+    + [サキエルのアニメドット絵ブログ](http://sakiel-design.com/wp-content/uploads/2018/02/ポプ子図案1.pdf)
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+## 準備
+
+### パッケージの読み込み
+```{r}
+library(tidyverse)
+library(data.table)
+library(ggimage)
+library(knitr)
+```
+
+### データの読み込み
+```{r}
+dat <- 
+  fread("data/popucode.csv")
+```
+
+## ポプ子作成
+
+### ノーマルバージョン
+
+* まずは原作に近いポプ子を作りたいとき
+
+```{r}
+popuko_normal <-
+  ggplot(dat) +
+  geom_point(aes(x,y, color = group),     # color = に色分けしたいグループを指定
+             size = 6,                    # 点の大きさ
+             shape = 15) +                # 点の形 →他の形はチートシート参照
+  coord_cartesian(xlim = c(-5,37),        # x,yの表示範囲を広げる
+                  ylim = c(0,37)) +
+  theme_classic() +
+  #背景を白くする（もっと白くしたければtheme_void()に）
+  scale_color_manual(values = c("#ffebd3", "#000000", "#4c6db3", 
+                                "#754d38","#e1ad21", "#d4522c", "#fcea37")) +
+  # 原作の色を忠実に指定
+  theme(legend.position = "none") +
+  annotate(geom = "text", 
+           label = "いやよくみたら\nクソむかつく", # テキストを任意の座標に貼りつけ
+           y = 18, x = 0, size = 7)
+
+popuko_normal
+
+# 保存
+ggsave(plot=popuko_normal, filename="results/popuko_normal.png",
+        dpi=300, height=20, width=20, units="cm")
+```
+
+
+### ロゴバージョン
+
+* 6角形のロゴで作ってみたいとき
+
+```{r}
+dat_logo <- 
+  dat %>%
+  mutate(color_image =  # 色と画像を対応付ける変数作成
+         case_when(group == "beige"  ~ "images/mag.png",  # imagesフォルダの中の画像を指定
+                   group == "black"  ~ "images/tidyverse.png",
+                   group == "blue"   ~ "images/readr.png",
+                   group == "brown"  ~ "images/forcats.png",
+                   group == "orange" ~ "images/dplyr.png",
+                   group == "red"    ~ "images/rmarkdown.png",
+                   group == "yellow" ~ "images/tidyr.png"))
+
+popuko_logo <- 
+  ggplot(dat_logo, aes(x, y)) +
+  geom_image(aes(image = color_image), size = .03) +
+  theme_classic()
+
+popuko_logo
+
+# 保存
+ggsave(plot=popuko_logo, filename="results/popuko_logo.png",
+       dpi=300, height=20, width=20, units="cm")
+```
+
