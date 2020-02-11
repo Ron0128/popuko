@@ -50,7 +50,7 @@ popuko_normal <-
   # 原作の色を忠実に指定
   theme(legend.position = "none") +
   annotate(geom = "text", 
-           label = "いやよくみたら\nクソむかつく", # テキストを任意の座標に貼りつけ
+           label = "いやよくみたら\nクソむかつく", # テキストを任意の座標に貼りつけ。\nは改行を示す
            y = 18, x = 0, size = 7)
 
 popuko_normal
