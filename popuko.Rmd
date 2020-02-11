@@ -20,7 +20,6 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 library(tidyverse)
 library(data.table)
 library(ggimage)
-library(knitr)
 ```
 
 ### データの読み込み
@@ -57,7 +56,7 @@ popuko_normal
 
 # 保存
 ggsave(plot=popuko_normal, filename="results/popuko_normal.png",
-        dpi=300, height=20, width=20, units="cm")
+       dpi=300, height=20, width=20, units="cm")
 ```
 
 
